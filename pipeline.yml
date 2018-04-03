@@ -117,7 +117,7 @@ jobs:
           git push origin master
 
   - put: myapp
-    params: {repository: built-project}
+    params: {repository: some-files}
     on_success:
       put: slack
       params:
