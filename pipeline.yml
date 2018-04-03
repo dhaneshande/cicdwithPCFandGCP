@@ -313,7 +313,7 @@ jobs:
           gcloud config set account ${ACCOUNT}
           gcloud config set project ${PROJECT_ID}
           gcloud config list
-          gcloud app deploy app.yaml
+          gcloud app deploy 
   #- put: gcp-env
     params:
       #manifest: myapp/app.yaml
