@@ -110,12 +110,6 @@ jobs:
           cat some-files/.txt
           cd some-files
           ls -la
-          git config --global user.email "dande@miraclesoft.com"
-          git config --global user.name "dhaneshande"
-          git add .
-          git commit -m "Bumped release"
-          git push origin master
-
   #- put: myapp
     #params: {repository: some-files}
     on_success:
