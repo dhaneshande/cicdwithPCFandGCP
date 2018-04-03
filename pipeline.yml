@@ -1,0 +1,347 @@
+---
+
+resource_types:
+- name: artifactory 
+  type: docker-image
+  source:
+    repository: pivotalservices/artifactory-resource
+
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+- name: sonar-runner
+  type: docker-image
+  source:
+    repository: cathive/concourse-sonarqube-resource
+- name: gcp 
+  type: docker-image
+  source:
+    repository: google/cloud-sdk   
+ 
+resources:
+- name: myapp
+  type: git
+  source:
+    uri: https://github.com/dhaneshande/cicdwithPCF.git
+    branch: master
+
+
+- name: cf-env
+  type: cf
+  source:
+    api: {{pws-api}}
+    username: {{pws-username}}
+    password: {{pws-password}}
+    organization: {{pws-organization}}
+    space: {{pws-space}}
+    skip_cert_check: true
+ 
+#- name: gcp-env
+  #type: gcp
+  #source:
+    #ACCOUNT: {{ACCOUNT}}
+    #PROJECT_ID: {{PROJECT_ID}}
+    #KEY_ID_GCP: {{KEY_ID_GCP}}
+    #KEY_GCP: {{KEY_GCP}}
+    #CLIENT_EMAIL: {{CLIENT_EMAIL}}
+    #CLIENT_ID: {{CLIENT_ID}}
+    #CLIENT_CERT_URL: {{CLIENT_CERT_URL}}
+    #skip_cert_check: true 
+- name: uaa-build
+  type: artifactory
+  source:
+    endpoint: {{artifactory-endpoint}}
+    repository: {{artifactory-repo}}
+    regex: {{artifactory-regex}}
+    username: {{artifactory-username}}
+    password: {{artifactory-password}}
+    skip_ssl_verification: true
+
+- name: slack
+  type: slack-notification
+  source:
+    url: https://hooks.slack.com/services/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
+
+jobs:
+ 
+- name: Versioning Job
+  serial: true
+  disable_manual_trigger: false   
+  plan:
+  - get: myapp
+    trigger: true
+  #- get: myappversion
+    #trigger: true
+  - task: build
+    config:
+      platform: linux
+      inputs:
+      - name: myapp
+      outputs:
+      - name: some-files
+      image_resource:
+        type: docker-image
+        source: { repository: node, tag: "latest" }
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          git clone myapp some-files
+          cd some-files
+          ls -la
+          npm pack
+          PACKAGE_VERSION=$(cat package.json \
+          | grep version \
+          | head -1 \
+          | awk -F: '{ print $2 }' \
+          | sed 's/[",]//g' \
+          | tr -d '[[:space:]]')
+          echo "current package version:${PACKAGE_VERSION}"
+          cd ..
+          ls -la
+          touch test.txt
+          chmod 777 test.txt
+          echo "$PACKAGE_VERSION" > "$test.txt" 		  
+          cp -r .txt some-files/
+          chmod 777 some-files/.txt
+          cat some-files/.txt
+          cd some-files
+          ls -la
+          git config --global user.email "dande@miraclesoft.com"
+          git config --global user.name "dhaneshande"
+          git add .
+          git commit -m "Bumped release"
+          git push origin master
+
+  - put: myapp
+    params: {repository: built-project}
+    on_success:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  versioning successfully Done
+    on_failure:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  versioning job got Failed			
+- name: Build Unit Tests And Upload to JFrog Artifactory 
+  serial: true
+  disable_manual_trigger: false    
+  plan:
+  - get: myapp
+    passed:
+      - Versioning Job
+    trigger: true
+  #- get: myappversion
+    #passed:
+      #- Versioning Job
+    #trigger: true
+  - task: build
+    config:
+      platform: linux
+      inputs:
+      - name: myapp
+      outputs:
+      - name: uaa_war
+      image_resource:
+        type: docker-image
+        source: { repository: node, tag: "6" }
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          export TERM=dumb
+          cd myapp
+          npm install
+          npm run test
+          npm run test:coverage
+          npm run test:report
+          npm pack
+          ls -la
+          mv ./myapp-0.0.0.tgz ../uaa_war
+          ls -la
+  - put: uaa-build
+    params:
+      file: uaa_war/myapp-*.tgz
+    on_success:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  Building of Node.js app and unit tests is successfull and storing of the build artifacts to Artifactory is successfull!
+    on_failure:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  Building of Node.js app unit tests Failed and storing of the build artifacts to Artifactory Failed!
+- name: SonarScan
+  serial: true   
+  plan:
+  - get: myapp
+    passed:
+      - Build Unit Tests And Upload to JFrog Artifactory
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      inputs:
+      - name: myapp
+      outputs:
+      - name: sss
+      image_resource:
+        type: docker-image
+        source: { repository: cathive/concourse-sonarqube-resource, tag: "latest" }
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          cd myapp
+          sonar-scanner
+          ls -la
+  
+    on_success:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  Posting results in sonar scan is successfully Done
+    on_failure:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  Posting results in sonar scan got Failed		
+- name: deploy to pws
+  serial: true
+  plan:
+  - get: uaa-build 
+    trigger: true
+  - get: myapp
+    passed:
+      - SonarScan
+    trigger: true
+  - task: retrieve
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: ubuntu
+          tag: "latest"
+      inputs:
+      - name: uaa-build
+      outputs:
+      - name: uaaa
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          export TERM=dumb
+          ls -la
+          ls -la uaa-build
+          chmod -R 777 uaa-build
+          ls -la
+          cd uaa-build
+          tar -xvzf myapp-0.0.0.tgz
+          ls -la
+          chmod -R 777 package
+          cd package
+          ls -la
+    
+  - put: cf-env
+    params:
+      manifest: myapp/manifest.yml
+      path: myapp
+    on_success:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  PWS Deployment Success!
+    on_failure:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  PWS Deployment Failed!
+- name: deploy to GCP
+  serial: true
+  plan:
+  - get: uaa-build 
+    trigger: true
+  - get: myapp
+    passed:
+      - SonarScan
+    trigger: true
+  - task: retrieve
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: google/cloud-sdk
+          tag: "latest"
+      inputs:
+      - name: myapp
+      outputs:
+      - name: uaaag
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          export TERM=dumb
+          ls -la
+          cd myapp
+          ls -la
+          chmod 744 keyfile-create.sh
+          ./keyfile-create.sh
+          cat keyfile.json
+          gcloud auth activate-service-account --key-file=keyfile.json
+          gcloud config set account ${ACCOUNT}
+          gcloud config set project ${PROJECT_ID}
+          gcloud config list
+          gcloud app deploy app.yaml
+  #- put: gcp-env
+    params:
+      #manifest: myapp/app.yaml
+      #path: myapp
+      ACCOUNT: {{ACCOUNT}}
+      PROJECT_ID: {{PROJECT_ID}}
+      KEY_ID_GCP: {{KEY_ID_GCP}}
+      KEY_GCP: {{KEY_ID_GCP}}
+      CLIENT_ID: {{CLIENT_ID}}
+      CLIENT_EMAIL: {{CLIENT_EMAIL}}
+      CLIENT_CERT_URL: {{CLIENT_CERT_URL}} 
+    on_success:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  PWS Deployment Success!
+    on_failure:
+      put: slack
+      params:
+        channel: "#general"
+        username: dhanesh
+        icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+        text:  PWS Deployment Failed!
