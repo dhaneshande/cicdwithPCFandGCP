@@ -24,7 +24,7 @@ resources:
 - name: myapp
   type: git
   source:
-    uri: https://github.com/dhaneshande/cicdwithPCF.git
+    uri:https://github.com/dhaneshande/cicdwithPCFandGCP.git
     branch: master
 
 
