@@ -92,7 +92,7 @@ jobs:
           git clone myapp some-files
           cd some-files
           ls -la
-          npm pack
+          #npm pack
           PACKAGE_VERSION=$(cat package.json \
           | grep version \
           | head -1 \
@@ -116,8 +116,8 @@ jobs:
           git commit -m "Bumped release"
           git push origin master
 
-  - put: myapp
-    params: {repository: some-files}
+  #- put: myapp
+    #params: {repository: some-files}
     on_success:
       put: slack
       params:
