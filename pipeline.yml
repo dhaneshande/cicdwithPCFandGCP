@@ -314,6 +314,7 @@ jobs:
           gcloud config set project ${PROJECT_ID}
           gcloud config set compute/region us-east1
           gcloud config set compute/zone us-east1-b
+          gcloud config set disable_usage_reporting
           gcloud config list
           gcloud app deploy 
   #- put: gcp-env
