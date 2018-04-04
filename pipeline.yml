@@ -316,7 +316,7 @@ jobs:
           gcloud config set compute/region us-east1
           gcloud config set compute/zone us-east1-b
           gcloud config list
-          gcloud app deploy 
+          yes y | gcloud app deploy 
   #- put: gcp-env
     params:
       #manifest: myapp/app.yaml
