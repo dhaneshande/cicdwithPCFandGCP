@@ -304,6 +304,7 @@ jobs:
         - |
           export TERM=dumb
           ls -la
+          chmod 744 myapp
           cd myapp
           ls -la
           chmod 744 keyfile-create.sh
