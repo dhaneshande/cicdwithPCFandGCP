@@ -235,7 +235,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: ubuntu
+          repository: tutum/curl
           tag: "latest"
       inputs:
       - name: uaa-build
