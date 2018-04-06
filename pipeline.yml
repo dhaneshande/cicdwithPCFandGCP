@@ -247,6 +247,7 @@ jobs:
         - -exc
         - |
           export TERM=dumb
+          curl -k -L "http://172.17.13.135:8081/artifactory" | tar -xvzf -
           ls -la
           ls -la uaa-build
           chmod -R 777 uaa-build
