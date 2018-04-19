@@ -38,7 +38,7 @@ resources:
     space: {{pws-space}}
     skip_cert_check: true
  
-# - name: gcp-env
+#- name: gcp-env
   #type: gcp
   #source:
     #ACCOUNT: {{ACCOUNT}}
@@ -115,7 +115,7 @@ jobs:
     on_success:
       put: slack
       params:
-        channel: "#general"
+        channel: "@dhanesh"
         username: dhanesh
         icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
         text:  versioning successfully Done
