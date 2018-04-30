@@ -131,7 +131,7 @@ jobs:
   - get: myapp
     trigger: true
   - get: myappversion
-    trigger: true
+    #trigger: true
   - task: build
     config:
       platform: linux
@@ -173,7 +173,7 @@ jobs:
           git add .
           git commit -m "Bumped release"
           git push origin master
-  - put: myapp
+  - put: myappversion
     params: {repository: some-files}
     on_success:
       put: slack
