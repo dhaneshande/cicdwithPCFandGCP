@@ -64,7 +64,7 @@ resources:
   source:
     url: https://hooks.slack.com/services/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
 
-- name: myapp
+- name: myappversion
   type: git
   source:
     uri: git@github.com:dhaneshande/cicdwithPCFandGCP.git
@@ -130,8 +130,8 @@ jobs:
   plan:
   - get: myapp
     trigger: true
-  #- get: myappversion
-    #trigger: true
+  - get: myappversion
+    trigger: true
   - task: build
     config:
       platform: linux
