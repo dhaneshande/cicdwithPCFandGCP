@@ -67,7 +67,7 @@ resources:
 - name: myappversion
   type: git
   source:
-    uri: https://gist.github.com/4ff9c5c105d16c21ad22d38df540688f.git
+    uri: git@gist.github.com:4ff9c5c105d16c21ad22d38df540688f.git
     branch: master
     private_key: |
       -----BEGIN RSA PRIVATE KEY-----
@@ -174,7 +174,7 @@ jobs:
           git config --global user.name "dhaneshande"
           git add .
           git commit -m "Bumped release"
-          git push origin master
+          #git push origin master
   - put: myappversion
     params: {repository: some-files}
     on_success:
