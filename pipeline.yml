@@ -167,7 +167,7 @@ jobs:
           #cp -r .txt some-files/
           #chmod 777 some-files/.txt
           #chmod 777 some-files/version
-          cat some-files/version
+          #cat some-files/version
           cd some-files
           ls -la
           git config --global user.email "dande@miraclesoft.com"
