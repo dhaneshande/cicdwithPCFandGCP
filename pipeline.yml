@@ -64,6 +64,64 @@ resources:
   source:
     url: https://hooks.slack.com/services/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
 
+- name: myapp
+  type: git
+  source:
+    uri: git@github.com:dhaneshande/cicdwithPCFandGCP.git
+    branch: master
+    private_key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      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
+      -----END RSA PRIVATE KEY-----	
+
 jobs:
  
 - name: Versioning Job
@@ -110,8 +168,13 @@ jobs:
           cat some-files/.txt
           cd some-files
           ls -la
-  #- put: myapp
-    #params: {repository: some-files}
+          git config --global user.email "dande@miraclesoft.com"
+          git config --global user.name "dhaneshande"
+          git add .
+          git commit -m "Bumped release"
+          git push origin master
+  - put: myapp
+    params: {repository: some-files}
     on_success:
       put: slack
       params:
