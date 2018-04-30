@@ -158,17 +158,17 @@ jobs:
           | sed 's/[",]//g' \
           | tr -d '[[:space:]]')
           echo "current package version:${PACKAGE_VERSION}"
-          cd ..
+          #cd ..
           ls -la
-          touch test.txt
-          chmod 777 test.txt
+          touch version
+          chmod 777 version
           #echo "$PACKAGE_VERSION" > "$test.txt" 
           echo "$PACKAGE_VERSION" > version	  
           #cp -r .txt some-files/
           #chmod 777 some-files/.txt
           #chmod 777 some-files/version
           #cat some-files/version
-          cd some-files
+          #cd some-files
           ls -la
           git config --global user.email "dande@miraclesoft.com"
           git config --global user.name "dhaneshande"
