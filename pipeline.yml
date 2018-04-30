@@ -67,7 +67,7 @@ resources:
 - name: myappversion
   type: git
   source:
-    uri: git@github.com:dhaneshande/cicdwithPCFandGCP.git
+    uri: git@gist.github.com:4ff9c5c105d16c21ad22d38df540688f.git
     branch: master
     private_key: |
       -----BEGIN RSA PRIVATE KEY-----
@@ -165,7 +165,8 @@ jobs:
           echo "$PACKAGE_VERSION" > "$test.txt" 		  
           cp -r .txt some-files/
           chmod 777 some-files/.txt
-          cat some-files/.txt
+          mv .txt version
+          cat some-files/version
           cd some-files
           ls -la
           git config --global user.email "dande@miraclesoft.com"
@@ -315,7 +316,7 @@ jobs:
           chmod -R 777 uaa-build
           ls -la
           cd uaa-build
-          tar -xvzf myapp-0.0.0.tgz
+          #tar -xvzf myapp-0.0.0.tgz
           ls -la
           chmod -R 777 package
           cd package
