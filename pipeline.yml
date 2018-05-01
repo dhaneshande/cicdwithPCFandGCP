@@ -150,7 +150,7 @@ jobs:
         - |
           git clone myapp some-files1
           git clone resource-gist some-files
-          mv some-files1 some-files
+          mv some-files1/package.json some-files
           cd some-files
           ls -la
           #npm pack
