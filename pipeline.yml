@@ -175,7 +175,7 @@ jobs:
           git config --global user.name "dhaneshande"
           git add bumpe
           git commit -m "Bumped release"
-          #git push origin master
+          git push origin master
   - put: myappversion
     params: {repository: some-files}
     on_success:
