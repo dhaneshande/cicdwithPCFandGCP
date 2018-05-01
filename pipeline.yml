@@ -179,7 +179,7 @@ jobs:
           #git pull
           git add version
           git commit -m "Bumped release"
-          git push origin master -f
+          #git push origin master -f
   - put: resource-gist
     params: {repository: some-files}
     on_success:
