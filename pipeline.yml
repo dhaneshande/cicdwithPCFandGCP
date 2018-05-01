@@ -148,6 +148,7 @@ jobs:
         - -exc
         - |
           git clone myapp some-files
+          #git pull git@gist.github.com:4ff9c5c105d16c21ad22d38df540688f.git
           #git clone myappversion some-files
           cd some-files
           ls -la
@@ -177,7 +178,7 @@ jobs:
           git add version
           git commit -m "Bumped release"
           git push origin master -f
-  - put: myappversion
+  - put: myapp
     params: {repository: some-files}
     on_success:
       put: slack
