@@ -165,13 +165,6 @@ jobs:
           ls -la
           touch version
           chmod 777 version
-          #echo "$PACKAGE_VERSION" > "$test.txt" 
-          #echo "$PACKAGE_VERSION" > version	  
-          #cp -r .txt some-files/
-          #chmod 777 some-files/.txt
-          #chmod 777 some-files/version
-          #cat some-files/version
-          #cd some-files
           ls -la
           #echo $(date) > version
           echo "$PACKAGE_VERSION" > version
