@@ -67,7 +67,7 @@ resources:
 - name: myappversion
   type: git
   source:
-    uri: git@gist.github.com:4ff9c5c105d16c21ad22d38df540688f.git
+    uri: git@gist.github.com:c93fa4887517031f0482a5dd1bab5371.git
     branch: master
     private_key: |
       -----BEGIN RSA PRIVATE KEY-----
@@ -163,16 +163,17 @@ jobs:
           touch version
           chmod 777 version
           #echo "$PACKAGE_VERSION" > "$test.txt" 
-          echo "$PACKAGE_VERSION" > version	  
+          #echo "$PACKAGE_VERSION" > version	  
           #cp -r .txt some-files/
           #chmod 777 some-files/.txt
           #chmod 777 some-files/version
           #cat some-files/version
           #cd some-files
           ls -la
+          echo $(date) > bumpme
           git config --global user.email "dande@miraclesoft.com"
           git config --global user.name "dhaneshande"
-          git add .
+          git add bumpe
           git commit -m "Bumped release"
           #git push origin master
   - put: myappversion
@@ -318,9 +319,9 @@ jobs:
           ls -la
           cd uaa-build
           #tar -xvzf myapp-0.0.0.tgz
-          ls -la
-          chmod -R 777 package
-          cd package
+          #ls -la
+          #chmod -R 777 package
+          #cd package
           ls -la
     
   - put: cf-env
