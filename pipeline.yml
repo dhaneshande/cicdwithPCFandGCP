@@ -67,7 +67,7 @@ resources:
 - name: myappversion
   type: git
   source:
-    uri: git@gist.github.com:c93fa4887517031f0482a5dd1bab5371.git
+    uri: git@gist.github.com:4ff9c5c105d16c21ad22d38df540688f.git
     branch: master
     private_key: |
       -----BEGIN RSA PRIVATE KEY-----
@@ -160,8 +160,8 @@ jobs:
           echo "current package version:${PACKAGE_VERSION}"
           #cd ..
           ls -la
-          touch bumpe
-          chmod 777 bumpe
+          touch version
+          chmod 777 version
           #echo "$PACKAGE_VERSION" > "$test.txt" 
           #echo "$PACKAGE_VERSION" > version	  
           #cp -r .txt some-files/
@@ -170,12 +170,12 @@ jobs:
           #cat some-files/version
           #cd some-files
           ls -la
-          echo $(date) > bumpe
+          echo $(date) > version
           git config --global user.email "dande@miraclesoft.com"
           git config --global user.name "dhaneshande"
-          git add bumpe
+          git add version
           git commit -m "Bumped release"
-          git push origin master
+          #git push origin master
   - put: myappversion
     params: {repository: some-files}
     on_success:
