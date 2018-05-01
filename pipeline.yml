@@ -148,9 +148,9 @@ jobs:
         args:
         - -exc
         - |
-          #git clone myapp some-files
-          #git clone https://gist.github.com/4ff9c5c105d16c21ad22d38df540688f.git
+          git clone myapp some-files1
           git clone resource-gist some-files
+          mv some-files1 some-files
           cd some-files
           ls -la
           #npm pack
