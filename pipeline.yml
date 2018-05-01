@@ -150,6 +150,7 @@ jobs:
           git clone myapp some-files
           git clone https://gist.github.com/4ff9c5c105d16c21ad22d38df540688f.git
           #git clone myappversion some-files
+          git pull
           cd some-files
           ls -la
           #npm pack
@@ -175,6 +176,7 @@ jobs:
           echo $(date) > version
           git config --global user.email "dande@miraclesoft.com"
           git config --global user.name "dhaneshande"
+          git pull
           git add version
           git commit -m "Bumped release"
           git push origin master -f
