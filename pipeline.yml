@@ -173,7 +173,8 @@ jobs:
           #cat some-files/version
           #cd some-files
           ls -la
-          echo $(date) > version
+          #echo $(date) > version
+          echo "$PACKAGE_VERSION" > version
           git config --global user.email "dande@miraclesoft.com"
           git config --global user.name "dhaneshande"
           #git pull
