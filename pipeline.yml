@@ -148,7 +148,7 @@ jobs:
         - -exc
         - |
           git clone myapp some-files
-          yes | git clone git@gist.github.com:4ff9c5c105d16c21ad22d38df540688f.git
+          yes | git clone git@gist.github.com:4ff9c5c105d16c21ad22d38df540688f.git | yes
           #git clone myappversion some-files
           cd some-files
           ls -la
