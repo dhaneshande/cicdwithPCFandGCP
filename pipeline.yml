@@ -130,7 +130,7 @@ jobs:
   plan:
   - get: myapp
     trigger: true
-  - get: myappversion
+  - get: resource-gist
     #trigger: true
   - task: build
     config:
