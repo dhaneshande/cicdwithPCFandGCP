@@ -64,7 +64,7 @@ resources:
   source:
     url: https://hooks.slack.com/services/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
 
-- name: myappversion
+- name: resource-gist
   type: git
   source:
     uri: git@gist.github.com:4ff9c5c105d16c21ad22d38df540688f.git
@@ -137,6 +137,7 @@ jobs:
       platform: linux
       inputs:
       - name: myapp
+      - name: resource-gist
       outputs:
       - name: some-files
       image_resource:
@@ -148,7 +149,7 @@ jobs:
         - -exc
         - |
           git clone myapp some-files
-          git clone https://gist.github.com/4ff9c5c105d16c21ad22d38df540688f.git
+          #git clone https://gist.github.com/4ff9c5c105d16c21ad22d38df540688f.git
           #git clone myappversion some-files
           cd some-files
           ls -la
@@ -175,11 +176,11 @@ jobs:
           echo $(date) > version
           git config --global user.email "dande@miraclesoft.com"
           git config --global user.name "dhaneshande"
-          git pull
+          #git pull
           git add version
           git commit -m "Bumped release"
           git push origin master -f
-  - put: myappversion
+  - put: resource-gist
     params: {repository: some-files}
     on_success:
       put: slack
