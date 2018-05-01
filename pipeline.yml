@@ -160,8 +160,8 @@ jobs:
           echo "current package version:${PACKAGE_VERSION}"
           #cd ..
           ls -la
-          touch version
-          chmod 777 version
+          touch bumpe
+          chmod 777 bumpe
           #echo "$PACKAGE_VERSION" > "$test.txt" 
           #echo "$PACKAGE_VERSION" > version	  
           #cp -r .txt some-files/
@@ -170,7 +170,7 @@ jobs:
           #cat some-files/version
           #cd some-files
           ls -la
-          echo $(date) > bumpme
+          echo $(date) > bumpe
           git config --global user.email "dande@miraclesoft.com"
           git config --global user.name "dhaneshande"
           git add bumpe
