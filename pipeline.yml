@@ -243,7 +243,7 @@ jobs:
         channel: "#general"
         username: dhanesh
         icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
-        text:  Building of Node.js app unit tests Failed and storing of the build artifacts to Artifactory Failed!
+        text:  Building of Node.js app unit tests Failed and storing of the build artifacts to Artifactory Failed!!
 - name: SonarScan
   serial: true   
   plan:
