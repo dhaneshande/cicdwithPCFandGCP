@@ -38,7 +38,7 @@ resources:
     space: {{pws-space}}
     skip_cert_check: true
  
-#- name: gcp-env
+#- name: gcp-envv
   #type: gcp
   #source:
     #ACCOUNT: {{ACCOUNT}}
